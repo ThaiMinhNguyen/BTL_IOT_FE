@@ -1,0 +1,17 @@
+.dashboardNew{
+    .list-card{
+        margin-bottom: 20px;
+    }
+
+    .chart-button{
+        .chart-container{
+            display: flex; /* Kích hoạt flexbox */
+            justify-content: center; /* Căn giữa theo chiều ngang */
+            align-items: center; /* Căn giữa theo chiều dọc */
+            height: 450px;
+        }
+    }    
+
+}
+
+
