@@ -23,7 +23,7 @@ export default function DashboardNew() {
         const newDataPoint = generateFakeData();
         return [...prevData.slice(-59), newDataPoint]; // Giữ lại 60 điểm dữ liệu (5 phút)
       });
-    }, 1000); // Cập nhật dữ liệu mỗi 1 giây
+    }, 5000); // Cập nhật dữ liệu mỗi 5 giây
 
     return () => clearInterval(intervalId); // Dọn dẹp interval khi component unmount
   }, []);
