@@ -1,6 +1,5 @@
-import React, { useState } from 'react';
-import { Table, Input } from 'antd';
-import fakeData from './fakeData';  // Import dữ liệu giả từ file fakeData.js
+import React, { useState, useEffect } from 'react';
+import { Table, Input, message } from 'antd';
 
 const { Search } = Input;
 
@@ -59,23 +58,51 @@ const columns = [
     title: 'Time',
     dataIndex: 'time',
     sorter: (a, b) => new Date(a.time) - new Date(b.time),
-  }
+  },
 ];
 
 const TableSensors = () => {
-  const [data, setData] = useState(fakeData);  // Sử dụng dữ liệu giả đã tạo
+  const [data, setData] = useState([]);  // Khởi tạo state cho dữ liệu thực
+  const [loading, setLoading] = useState(false);  // Trạng thái tải dữ liệu
   const [tableParams, setTableParams] = useState({
     pagination: {
       current: 1,
       pageSize: 10,  // Số lượng bản ghi mỗi trang mặc định
       showSizeChanger: true, // Hiển thị tùy chọn chọn số lượng bản ghi mỗi trang
       pageSizeOptions: ['5', '10', '20', '50'], // Các tùy chọn số lượng bản ghi mỗi trang
-      total: fakeData.length,
+      total: 0, // Số lượng bản ghi ban đầu là 0
     },
   });
 
+  // Hàm fetch dữ liệu từ API
+  const fetchData = async () => {
+    setLoading(true);  // Bắt đầu tải dữ liệu
+    try {
+      const response = await fetch('http://localhost:5000/api/sensor_data');// URL của API
+      const result = await response.json();  // Parse kết quả JSON
+      console.log(result);
+      setData(result);  // Cập nhật dữ liệu vào state
+      setTableParams({
+        ...tableParams,
+        pagination: {
+          ...tableParams.pagination,
+          total: result.length,  // Cập nhật tổng số lượng bản ghi
+        },
+      });
+    } catch (error) {
+      message.error('Lỗi khi tải dữ liệu!');  // Hiển thị thông báo lỗi
+    } finally {
+      setLoading(false);  // Kết thúc tải dữ liệu
+    }
+  };
+
+  // Sử dụng useEffect để gọi fetchData khi component mount
+  useEffect(() => {
+    fetchData();
+  }, []);  // Chỉ gọi một lần khi component render lần đầu
+
   const handleTableChange = (pagination, filters, sorter) => {
-    const filteredData = fakeData
+    const filteredData = data
       .filter(item => {
         for (let key in filters) {
           if (filters[key] && filters[key].length > 0) {
@@ -109,7 +136,7 @@ const TableSensors = () => {
   };
 
   const onSearch = (value) => {
-    const filteredData = fakeData.filter(item =>
+    const filteredData = data.filter(item =>
       item.time.includes(value)
     );
     setData(filteredData);
@@ -138,6 +165,7 @@ const TableSensors = () => {
           columns={columns}
           rowKey="id"
           dataSource={data}
+          loading={loading}  // Trạng thái tải
           pagination={tableParams.pagination}
           onChange={handleTableChange}
           scroll={{ y: 400 }}
