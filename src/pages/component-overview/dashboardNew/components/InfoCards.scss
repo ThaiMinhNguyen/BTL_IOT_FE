@@ -33,17 +33,17 @@
   
       /* Thẻ nhiệt độ */
       &.temperature {
-        background: linear-gradient(to right, #ff8a80, #d32f2f); /* Gradient đỏ thể hiện nhiệt độ */
+        background: #d32f2f; /* Gradient đỏ thể hiện nhiệt độ */
       }
   
       /* Thẻ ánh sáng */
       &.light {
-        background: linear-gradient(to right, #fff176, #fbc02d); /* Gradient vàng thể hiện ánh sáng */
+        background:#fbc02d; /* Gradient vàng thể hiện ánh sáng */
       }
   
       /* Thẻ độ ẩm */
       &.humidity {
-        background: linear-gradient(to right, #81d4fa, #0288d1); /* Gradient xanh dương thể hiện độ ẩm */
+        background: #0288d1; /* Gradient xanh dương thể hiện độ ẩm */
       }
     }
   }
