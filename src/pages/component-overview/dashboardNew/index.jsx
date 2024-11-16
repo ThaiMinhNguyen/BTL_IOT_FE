@@ -3,12 +3,15 @@ import { Col, Row, Card, Switch, message } from 'antd';
 import ControlPanel from './components/ControlPanel'; // Import component ControlPanel
 import Chart from './components/Chart';
 import GasChart from './components/GasChart'; // Import GasChart
+import Chatbot from './components/Chatbot';
 import InfoCards from './components/InfoCards';
 import "./dashboardNew.scss";
 
 export default function DashboardNew() {
   const [data, setData] = useState([]);
   const [gasData, setGasData] = useState([]);
+  const [aqi, setAqi] = useState(50);
+  const [advice, setAdvice] = useState("Không khí ở mức tốt. Bạn có thể thoải mái hoạt động ngoài trời."); // Lời khuyên ban đầu
   const [isAutoMode, setIsAutoMode] = useState(true); // Chế độ tự động
 
   // useEffect(() => {
@@ -57,6 +60,16 @@ export default function DashboardNew() {
 
     generateFakeData();
 
+    const randomAqi = Math.floor(Math.random() * 150) + 1; // AQI từ 1-150
+    setAqi(randomAqi);
+    if (randomAqi <= 50) {
+      setAdvice("Không khí ở mức tốt. Bạn có thể thoải mái hoạt động ngoài trời.");
+    } else if (randomAqi <= 100) {
+      setAdvice("Không khí ở mức trung bình. Người nhạy cảm nên hạn chế hoạt động ngoài trời.");
+    } else {
+      setAdvice("Không khí ở mức kém. Hạn chế ra ngoài, đặc biệt là nhóm nhạy cảm.");
+    }
+
     const intervalId = setInterval(() => {
       generateFakeData();
     }, 5000);
@@ -72,7 +85,10 @@ export default function DashboardNew() {
         temperature={latestData.temperature}
         humidity={latestData.humidity}
         light={latestData.light}
-      /> {/* Truyền dữ liệu vào InfoCards */}s
+      /> {/* Truyền dữ liệu vào InfoCards */}
+
+      {/* Component Chatbot */}
+      <Chatbot aqi={aqi} advice={advice} />
 
       {/* Khối điều khiển thiết bị và hiển thị chất */}
       <Row gutter={20} className="control-and-quality">
